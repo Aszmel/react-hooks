@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const AppFunction = () => {
   const [count, setCount] = useState(0);
   const [isOn, setIsOn] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
   const handleCount = () => setCount(prevCount => prevCount + 1);
   const handleReset = () => setCount(0);
@@ -10,7 +11,16 @@ const AppFunction = () => {
 
   useEffect(() => {
     document.title = `You clicked ${count} times!`;
-  });
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [count]);
+
+  const handleMouseMove = e => {
+    setMousePosition({
+      x: e.pageX,
+      y: e.pageY
+    });
+  };
 
   return (
     <div
@@ -32,6 +42,10 @@ const AppFunction = () => {
         }}
         onClick={changeColor}
       />
+      <div>
+        <h2>Mouse Position</h2>
+        {JSON.stringify(mousePosition, null, 2)}
+      </div>
     </div>
   );
 };
